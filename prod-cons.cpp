@@ -4,63 +4,132 @@
 #include <semaphore.h>
 
 using namespace std ;
+sem_t semaforo ;                  //Declaro un semaforo inicializado a 0         
+	class Cola {
 
-// ---------------------------------------------------------------------
-// constantes 
-const unsigned 
-  num_items  = 40 ,
-  tam_vector = 10 ;              
+		private :
 
-// ---------------------------------------------------------------------
+			static const int TAM = 10 ;
+			int cola[TAM];
+			int numElementos ;
+		public:
+			Cola(){
 
-unsigned producir_dato()
-{
-  static int contador = 0 ;
-  cout << "producido: " << contador << endl << flush ;
-  return contador++ ;
-}
-// ---------------------------------------------------------------------
+				numElementos = 0 ;
 
-void consumir_dato( int dato )
-{
-    cout << "dato recibido: " << dato << endl ;
-}
-// ---------------------------------------------------------------------
+			}
 
-void * productor( void * )
-{   
-  for( unsigned i = 0 ; i < num_items ; i++ )
-  { 
-    int dato = producir_dato() ;
-    
-    // falta: insertar "dato" en el vector
-    // ................
+			void aniade(int elemento){
+				cola[numElementos]=elemento;
+				numElementos++;
+			}
 
-  }
-  return NULL ;
-}
-// ---------------------------------------------------------------------
+			bool lleno(){
 
-void * consumidor( void * )
-{   
-  for( unsigned i = 0 ; i < num_items ; i++ )
-  {   
-    int dato ;
-    
-    // falta: leer "dato" desde el vector intermedio
-    // .................
+				bool solucion ; 
+				if(numElementos==TAM){
+					solucion = true;
+				}
+				return solucion;
 
-    consumir_dato( dato ) ;
-  }
-  return NULL ;
-}
-//----------------------------------------------------------------------
+			}
+		
+			int getElemento(){
+				int solucion = -1;
 
-int main()
-{
-   
-  // falta: crear y poner en marcha las hebras, esperar que terminen
-  // ....
+				if(numElementos!=0){
 
-   return 0 ; 
-}
+					solucion = cola[0];
+					for(int i = 1 ; i < numElementos ; i++ ){
+						cola[i-1]=cola[i];
+					}
+				}else{
+					cerr << "No puedes obtener elemento " ;
+				}
+				return solucion ;
+			}
+			int getNum(){
+				return numElementos;
+			}
+
+
+	};
+
+	// ---------------------------------------------------------------------
+	// constantes 
+	const unsigned 
+	  num_items  = 40 ,
+	  tam_vector = 10 ;  
+	//___________________________________________________________________
+		Cola cola;   
+
+
+	// ---------------------------------------------------------------------
+
+	unsigned producir_dato()
+	{
+	  static int contador = 0 ;
+	  cout << "producido: " << contador << endl << flush ;
+	  return contador++ ;
+	}
+	// ---------------------------------------------------------------------
+
+	void consumir_dato( int dato )
+	{
+		cout << "dato recibido: " << dato << endl ;
+	}
+	// ---------------------------------------------------------------------
+
+	void * productor( void * )
+	{   
+	  for( unsigned i = 0 ; i < num_items ; i++ )
+	  { 
+		int dato = producir_dato() ;
+		cola.aniade(dato);
+
+		sem_post(&semaforo);//Incremento 1 el valor del semaforo , ya que hemos leido 1 dato.
+	   
+	  }
+	  return NULL ;
+	}
+	// ---------------------------------------------------------------------
+
+	void * consumidor( void * )
+	{   
+	  for( unsigned i = 0 ; i < num_items ; i++ )
+	  {   
+		int dato ;
+
+		sem_wait(&semaforo);
+		if(cola.getNum()!=0){
+			dato=cola.getElemento();
+		}
+
+		consumir_dato( dato ) ;
+	  }
+	  return NULL ;
+	}
+	//----------------------------------------------------------------------
+
+	int main()
+	{
+		pthread_t  productor;
+		pthread_t  consumidor ; 
+	
+	 
+		sem_init( &semaforo, 0, 0 );
+
+		//pthread_create(&productor,NULL,productor,NULL);
+		//pthread_create(&consumidor,NULL,consumidor,NULL);
+
+		//pthread_join( id_hebra[i], NULL );
+		//pthread_join( id_hebra[i], NULL );
+
+	
+
+
+	  // falta: crear y poner en marcha las hebras, esperar que terminen
+	  // ....
+
+	   return 0 ; 
+	}
