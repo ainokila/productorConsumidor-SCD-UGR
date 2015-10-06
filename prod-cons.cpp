@@ -83,16 +83,19 @@ using namespace std ;
 
 	void * productor( void * )
 	{   
-	  for( unsigned i = 0 ; i < num_items ; i++ )
-	  { 
 		if(!cola.lleno){
 
-			int dato = producir_dato() ;
-			cola.aniade(dato);
-			sem_post(&semaforo);//Incremento 1 el valor del semaforo , ya que hemos leido 1 dato.
-		}
+	 		 for( unsigned i = 0 ; i < num_items ; i++ )
+	  		  { 
+		
+
+				int dato = producir_dato() ;
+				cola.aniade(dato);
+				sem_post(&semaforo);//Incremento 1 el valor del semaforo , ya que hemos leido 1 dato.
+			  }
 	   
-	  }
+	  	}
+
 	  return NULL ;
 	}
 	// ---------------------------------------------------------------------
