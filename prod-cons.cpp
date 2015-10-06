@@ -121,17 +121,12 @@ using namespace std ;
 	 
 		sem_init( &semaforo, 0, 0 );
 
-		//pthread_create(&productor,NULL,productor,NULL);
-		//pthread_create(&consumidor,NULL,consumidor,NULL);
+		pthread_create(&productor,NULL,productor,NULL);
+		pthread_create(&consumidor,NULL,consumidor,NULL);
 
-		//pthread_join( id_hebra[i], NULL );
-		//pthread_join( id_hebra[i], NULL );
+		pthread_join( productor, NULL );
+		pthread_join( consumidor, NULL );
 
-	
-
-
-	  // falta: crear y poner en marcha las hebras, esperar que terminen
-	  // ....
 
 	   return 0 ; 
 	}

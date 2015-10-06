@@ -6,8 +6,7 @@
 using namespace std ;
 
 	   
-     	sem_t semaforo ;                  //Declaro un semaforo inicializado a 0 
-
+     	
 	class Cola {
 
 		private :
@@ -57,17 +56,16 @@ using namespace std ;
 
 
 	};
-	
+
+	//******************************************************************************************
+	//DECLARACION VARIABLES GLOBALES:
+
 	Cola cola;
+	sem_t semaforo ;                   
+	const unsigned num_items  = 40 ;
 
-	// ---------------------------------------------------------------------
-	// constantes 
-	const unsigned 
-	  num_items  = 40 ,
-	  tam_vector = 10 ;     
+	//******************************************************************************************
 
-
-	// ---------------------------------------------------------------------
 
 	unsigned producir_dato()
 	{
@@ -123,11 +121,11 @@ using namespace std ;
 	 
 		sem_init( &semaforo, 0, 0 );
 
-		//pthread_create(&productor,NULL,productor,NULL);
-		//pthread_create(&consumidor,NULL,consumidor,NULL);
+		pthread_create(&productor,NULL,productor,NULL);
+		pthread_create(&consumidor,NULL,consumidor,NULL);
 
-		//pthread_join( id_hebra[i], NULL );
-		//pthread_join( id_hebra[i], NULL );
+		pthread_join( productor, NULL );
+		pthread_join( consumidor, NULL );
 
 	
 
