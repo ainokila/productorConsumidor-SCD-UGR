@@ -4,7 +4,9 @@
 #include <semaphore.h>
 
 using namespace std ;
-sem_t semaforo ;                  //Declaro un semaforo inicializado a 0         
+
+	sem_t semaforo ;                  //Declaro un semaforo inicializado a 0    
+     
 	class Cola {
 
 		private :
@@ -54,14 +56,14 @@ sem_t semaforo ;                  //Declaro un semaforo inicializado a 0
 
 
 	};
+	
+	Cola cola;
 
 	// ---------------------------------------------------------------------
 	// constantes 
 	const unsigned 
 	  num_items  = 40 ,
-	  tam_vector = 10 ;  
-	//___________________________________________________________________
-		Cola cola;   
+	  tam_vector = 10 ;     
 
 
 	// ---------------------------------------------------------------------
