@@ -127,11 +127,6 @@ using namespace std ;
 		pthread_join( productor, NULL );
 		pthread_join( consumidor, NULL );
 
-	
-
-
-	  // falta: crear y poner en marcha las hebras, esperar que terminen
-	  // ....
 
 	   return 0 ; 
 	}
