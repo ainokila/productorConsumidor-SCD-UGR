@@ -83,16 +83,19 @@ using namespace std ;
 
 	void * productor( void * )
 	{   
-	  for( unsigned i = 0 ; i < num_items ; i++ )
-	  { 
-		if(!cola.lleno){
+		if(!cola.lleno()){
 
-			int dato = producir_dato() ;
-			cola.aniade(dato);
-			sem_post(&semaforo);//Incremento 1 el valor del semaforo , ya que hemos leido 1 dato.
-		}
+	 		 for( unsigned i = 0 ; i < num_items ; i++ )
+	  		  { 
+		
+
+				int dato = producir_dato() ;
+				cola.aniade(dato);
+				sem_post(&semaforo);//Incremento 1 el valor del semaforo , ya que hemos leido 1 dato.
+			  }
 	   
-	  }
+	  	}
+
 	  return NULL ;
 	}
 	// ---------------------------------------------------------------------
@@ -123,8 +126,8 @@ using namespace std ;
 	 
 		sem_init( &semaforo, 0, 0 );
 
-		pthread_create(&productor,NULL,productor,NULL);
-		pthread_create(&consumidor,NULL,consumidor,NULL);
+		pthread_create(&productor,NULL,productor,0);
+		pthread_create(&consumidor,NULL,consumidor,0);
 
 		pthread_join( productor, NULL );
 		pthread_join( consumidor, NULL );

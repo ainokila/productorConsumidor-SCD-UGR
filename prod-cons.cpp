@@ -83,7 +83,7 @@ using namespace std ;
 
 	void * productor( void * )
 	{   
-		if(!cola.lleno){
+		if(!cola.lleno()){
 
 	 		 for( unsigned i = 0 ; i < num_items ; i++ )
 	  		  { 
