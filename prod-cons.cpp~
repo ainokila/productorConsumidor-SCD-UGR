@@ -126,12 +126,16 @@ using namespace std ;
 	 
 		sem_init( &semaforo, 0, 0 );
 
-		pthread_create(&productor,NULL,productor,0);
-		pthread_create(&consumidor,NULL,consumidor,0);
+
+
+
+		pthread_create(&productor,NULL,productor,NULL);
+		pthread_create(&consumidor,NULL,consumidor,NULL);
 
 		pthread_join( productor, NULL );
 		pthread_join( consumidor, NULL );
-
+			
+		cout << "Fin de la tarea";
 
 	   return 0 ; 
 	}

@@ -131,7 +131,8 @@ using namespace std ;
 
 		pthread_join( productor, NULL );
 		pthread_join( consumidor, NULL );
-
+			
+		cout << "Fin de la tarea";
 
 	   return 0 ; 
 	}
