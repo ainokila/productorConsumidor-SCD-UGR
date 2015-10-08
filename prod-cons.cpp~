@@ -120,17 +120,15 @@ using namespace std ;
 	int main()
 	{
 
-		pthread_t  productor;
-		pthread_t  consumidor ; 
+		pthread_t productor;
+		pthread_t consumidor ; 
 	
 	 
 		sem_init( &semaforo, 0, 0 );
 
-
-
-
-		pthread_create(&productor,NULL,productor,NULL);
-		pthread_create(&consumidor,NULL,consumidor,NULL);
+		//Lanzo los dos hilos , consumidor y productor 
+		pthread_create(&productor,NULL,&productor,NULL);
+		pthread_create(&consumidor,NULL,&consumidor,NULL);
 
 		pthread_join( productor, NULL );
 		pthread_join( consumidor, NULL );
