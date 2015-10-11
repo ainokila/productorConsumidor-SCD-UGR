@@ -50,6 +50,7 @@ using namespace std ;
 				}
 				return solucion ;
 			}
+
 			int getNum(){
 				return numElementos;
 			}
@@ -83,18 +84,17 @@ using namespace std ;
 
 	void * productor( void * )
 	{   
-		if(!cola.lleno()){
-
+		
 	 		 for( unsigned i = 0 ; i < num_items ; i++ )
 	  		  { 
-		
+				if(!cola.lleno()){
 
-				int dato = producir_dato() ;
-				cola.aniade(dato);
-				sem_post(&semaforo);//Incremento 1 el valor del semaforo , ya que hemos leido 1 dato.
-			  }
+					int dato = (int) producir_dato() ;
+					cola.aniade(dato);
+					sem_post(&semaforo);//Incremento 1 el valor del semaforo , ya que hemos leido 1 dato.
+			  	}
 	   
-	  	}
+	  		}
 
 	  return NULL ;
 	}
@@ -107,6 +107,7 @@ using namespace std ;
 		int dato ;
 
 		sem_wait(&semaforo);
+
 		if(cola.getNum()!=0){
 			dato=cola.getElemento();
 		}
@@ -119,20 +120,23 @@ using namespace std ;
 
 	int main()
 	{
+		sem_init( &semaforo, 0, 0 );
 
 		pthread_t productor;
 		pthread_t consumidor ; 
 	
 	 
-		sem_init( &semaforo, 0, 0 );
+		
 
 		//Lanzo los dos hilos , consumidor y productor 
-		//pthread_create(&productor,NULL,&productor,NULL);
-		//pthread_create(&consumidor,NULL,&consumidor,NULL);
+		pthread_create(&productor,NULL,productor,NULL);
+		pthread_create(&consumidor,NULL,consumidor,NULL);
 
-		//pthread_join( productor, NULL );
-		//pthread_join( consumidor, NULL );
+		pthread_join( productor, NULL );
+		pthread_join( consumidor, NULL );
 			
+		sem_destroy(&semaforo);
+
 		cout << "Fin de la tarea";
 
 	   return 0 ; 

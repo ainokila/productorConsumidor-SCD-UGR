@@ -20,7 +20,7 @@ pc: prod-cons
 	./prod-cons
 
 prod-cons: prod-cons.cpp
-	g++ -o prod-cons $(params_comp)  prod-cons.cpp
+	g++ -o prod-cons $(params_comp)  prod-cons.cpp -lrt -lpthread
 
 ## ---------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ fu: fumadores
 	./fumadores
 
 fumadores: fumadores.cpp 
-	g++ -o fumadores $(params_comp) fumadores.cpp
+	g++ -o fumadores $(params_comp) fumadores.cpp -lrt -lpthread
 
 ## ---------------------------------------------------------------------
 
