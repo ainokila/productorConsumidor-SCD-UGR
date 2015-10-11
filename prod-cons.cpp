@@ -91,16 +91,16 @@ using namespace std ;
 
 				if(!cola.lleno()){
 
-					sem_wait(&escribe);
+					sem_wait(&escribe);                    //Espera permiso para poder escribir
 					int dato = (int) producir_dato() ;
-					sem_post(&escribe);
+					sem_post(&escribe);			// Devuelve el permiso de escribir
 
 					cola.aniade(dato);
 					sem_post(&semaforo);//Incremento 1 el valor del semaforo , ya que hemos leido 1 dato.
 			  	}else{
 					i--;
 				}
-				//cout << "                             La cola tiene : " << cola.getNum() << " elementos\n";
+				
 	   
 	  		}
 
@@ -120,14 +120,14 @@ using namespace std ;
 
 			dato=cola.getElemento();
 
-			sem_wait(&escribe);
-			consumir_dato( dato ) ;
-			sem_post(&escribe);
+			sem_wait(&escribe);				//Espera permiso de escritura
+			consumir_dato( dato ) ;				//Escribe	
+			sem_post(&escribe);				//Devuelve permiso de escritura
 
 		}else{
 			i--;
 		}
-		//cout << "                                             La cola tiene : " << cola.getNum() << " elementos\n";
+		
 		
 	  }
 	  return NULL ;
@@ -137,7 +137,7 @@ using namespace std ;
 	int main(){
 
 		sem_init( &semaforo, 0, 0 );
-		sem_init( &escribe, 0, 1 );
+		sem_init( &escribe, 0, 1 );	//Lo inicializo a 1 para que se pueda escribir , el primer proceso que lo coja
 
 		pthread_t produce;
 		pthread_t consume ; 
@@ -150,6 +150,7 @@ using namespace std ;
 		pthread_join( consume, NULL );
 			
 		sem_destroy(&semaforo);
+		sem_destroy(&escribe);
 
 		cout << "Fin de la tarea";
 
