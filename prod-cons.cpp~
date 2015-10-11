@@ -37,6 +37,7 @@ using namespace std ;
 			}
 		
 			int getElemento(){
+
 				int solucion = -1;
 
 				if(numElementos!=0){
@@ -45,6 +46,7 @@ using namespace std ;
 					for(int i = 1 ; i < numElementos ; i++ ){
 						cola[i-1]=cola[i];
 					}
+					numElementos--;
 				}else{
 					cerr << "No puedes obtener elemento " ;
 				}
@@ -62,7 +64,8 @@ using namespace std ;
 	//DECLARACION VARIABLES GLOBALES:
 
 	Cola cola;
-	sem_t semaforo ;                   
+	sem_t semaforo ; 
+	sem_t escribe;                  
 	const unsigned num_items  = 40 ;
 
 	//******************************************************************************************
@@ -88,10 +91,16 @@ using namespace std ;
 
 				if(!cola.lleno()){
 
+					sem_wait(&escribe);
 					int dato = (int) producir_dato() ;
+					sem_post(&escribe);
+
 					cola.aniade(dato);
 					sem_post(&semaforo);//Incremento 1 el valor del semaforo , ya que hemos leido 1 dato.
-			  	}
+			  	}else{
+					i--;
+				}
+				//cout << "                             La cola tiene : " << cola.getNum() << " elementos\n";
 	   
 	  		}
 
@@ -106,12 +115,20 @@ using namespace std ;
 		int dato ;
 
 		sem_wait(&semaforo);
-
+		
 		if(cola.getNum()!=0){
-			dato=cola.getElemento();
-		}
 
-		consumir_dato( dato ) ;
+			dato=cola.getElemento();
+
+			sem_wait(&escribe);
+			consumir_dato( dato ) ;
+			sem_post(&escribe);
+
+		}else{
+			i--;
+		}
+		//cout << "                                             La cola tiene : " << cola.getNum() << " elementos\n";
+		
 	  }
 	  return NULL ;
 	}
@@ -120,6 +137,7 @@ using namespace std ;
 	int main(){
 
 		sem_init( &semaforo, 0, 0 );
+		sem_init( &escribe, 1, 0 );
 
 		pthread_t produce;
 		pthread_t consume ; 
@@ -128,8 +146,8 @@ using namespace std ;
 		pthread_create(&produce,NULL,&productor,NULL);
 		pthread_create(&consume,NULL,&consumidor,NULL);
 
-		pthread_join( productor, NULL );
-		pthread_join( consumidor, NULL );
+		pthread_join( produce, NULL );
+		pthread_join( consume, NULL );
 			
 		sem_destroy(&semaforo);
 
