@@ -82,11 +82,10 @@ using namespace std ;
 	}
 	// ---------------------------------------------------------------------
 
-	void * productor( void * )
-	{   
+	void* productor( void* ){   
 		
-	 		 for( unsigned i = 0 ; i < num_items ; i++ )
-	  		  { 
+	 		 for( unsigned i = 0 ; i < num_items ; i++ ){ 
+
 				if(!cola.lleno()){
 
 					int dato = (int) producir_dato() ;
@@ -100,10 +99,10 @@ using namespace std ;
 	}
 	// ---------------------------------------------------------------------
 
-	void * consumidor( void * )
-	{   
-	  for( unsigned i = 0 ; i < num_items ; i++ )
-	  {   
+	void* consumidor( void* ){   
+
+	  for( unsigned i = 0 ; i < num_items ; i++ ){   
+
 		int dato ;
 
 		sem_wait(&semaforo);
@@ -118,23 +117,22 @@ using namespace std ;
 	}
 	//----------------------------------------------------------------------
 
-	int main()
-	{
+	int main(){
+
 		sem_init( &semaforo, 0, 0 );
 
-		pthread_t productor;
-		pthread_t consumidor ; 
-	
-	 
-		
+		pthread_t produce;
+		pthread_t consume ; 
 
 		//Lanzo los dos hilos , consumidor y productor 
-		pthread_create(&productor,NULL,productor,NULL);
-		pthread_create(&consumidor,NULL,consumidor,NULL);
+		pthread_create(&produce,NULL,&productor,NULL);
+		pthread_create(&consume,NULL,&consumidor,NULL);
 
 		pthread_join( productor, NULL );
 		pthread_join( consumidor, NULL );
 			
+		sem_destroy(&semaforo);
+
 		cout << "Fin de la tarea";
 
 	   return 0 ; 
