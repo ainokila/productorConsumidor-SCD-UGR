@@ -64,8 +64,9 @@ using namespace std ;
 	//DECLARACION VARIABLES GLOBALES:
 
 	Cola cola;
-	sem_t semaforo ; 
-	sem_t escribe;                  
+	sem_t produc ;
+	sem_t consum ; 
+	sem_t escribePantalla;                  
 	const unsigned num_items  = 40 ;
 
 	//******************************************************************************************
@@ -89,17 +90,17 @@ using namespace std ;
 		
 	 		 for( unsigned i = 0 ; i < num_items ; i++ ){ 
 
-				if(!cola.lleno()){
+				
+					sem_wait(&produc);
 
-					sem_wait(&escribe);                    //Espera permiso para poder escribir
+					sem_wait(&escribePantalla);                    //Espera permiso para poder escribir
 					int dato = (int) producir_dato() ;
-					sem_post(&escribe);			// Devuelve el permiso de escribir
+					sem_post(&escribePantalla);			// Devuelve el permiso de escribir
 
 					cola.aniade(dato);
-					sem_post(&semaforo);//Incremento 1 el valor del semaforo , ya que hemos leido 1 dato.
-			  	}else{
-					i--;
-				}
+
+					sem_post(&consum);
+					
 				
 	   
 	  		}
@@ -112,21 +113,16 @@ using namespace std ;
 
 	  for( unsigned i = 0 ; i < num_items ; i++ ){   
 
-		int dato ;
-
-		sem_wait(&semaforo);
-		
-		if(cola.getNum()!=0){
-
+		int dato ;		
+			
+			sem_wait(&consum);
 			dato=cola.getElemento();
 
-			sem_wait(&escribe);				//Espera permiso de escritura
-			consumir_dato( dato ) ;				//Escribe	
-			sem_post(&escribe);				//Devuelve permiso de escritura
-
-		}else{
-			i--;
-		}
+			sem_wait(&escribePantalla);				//Espera permiso de escritura
+			consumir_dato( dato ) ;				//escribePantalla	
+			sem_post(&escribePantalla);				//Devuelve permiso de escritura
+			sem_post(&produc);
+		
 		
 		
 	  }
@@ -136,8 +132,9 @@ using namespace std ;
 
 	int main(){
 
-		sem_init( &semaforo, 0, 0 );
-		sem_init( &escribe, 0, 1 );	//Lo inicializo a 1 para que se pueda escribir , el primer proceso que lo coja
+		sem_init( &produc, 0, 10 );
+		sem_init( &consum, 0, 0 );
+		sem_init( &escribePantalla, 0, 1 );	
 
 		pthread_t produce;
 		pthread_t consume ; 
@@ -149,8 +146,8 @@ using namespace std ;
 		pthread_join( produce, NULL );
 		pthread_join( consume, NULL );
 			
-		sem_destroy(&semaforo);
-		sem_destroy(&escribe);
+		
+		sem_destroy(&escribePantalla);
 
 		cout << "Fin de la tarea";
 
