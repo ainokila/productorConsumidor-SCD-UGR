@@ -148,6 +148,8 @@ using namespace std ;
 			
 		
 		sem_destroy(&escribePantalla);
+		sem_destroy(&produc);
+		sem_destroy(&consum);
 
 		cout << "Fin de la tarea";
 

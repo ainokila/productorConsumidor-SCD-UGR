@@ -47,8 +47,6 @@ using namespace std;
 			int auxiliar;
 			auxiliar=rand()%3;
 		
-			//Lo guardo en producto generado
-			productoGenerado=auxiliar;
 
 			switch (auxiliar){
 				case 0: 
@@ -65,7 +63,7 @@ using namespace std;
 					 break;
 				
 			}
-			sem_signal(&productoPreparado[posicion]);
+			sem_post(&productoPreparado[auxiliar]);
 		
 		
 		}
@@ -77,18 +75,18 @@ using namespace std;
 
 		while(true){
 
-			int valor = (int) posicion;
+			unsigned long valor = (unsigned long) posicion;
 			//Espero producto generado
 
-			sem_wait(&productoPreparado[posicion]);
+			sem_wait(&productoPreparado[valor]);
 			
-			cout << "Fumador " << posicion << "  va a fumar \n";
+			cout << "Fumador " << valor << "  va a fumar \n";
 			
-			sem_signal(&semaforoEstanco);
+			sem_post(&semaforoEstanco);
 
 			fumar();
 
-			cout << "Fumador " << posicion << "  termina de fumar \n" ;
+			cout << "Fumador " << valor << "  termina de fumar \n" ;
 			
 		}
 
@@ -116,13 +114,13 @@ using namespace std;
 		
 		//Lanzo los hilos , el de los fumadores con un for.
 
-		pthread fumadores[3];
-		pthread estanco;
+		pthread_t fumadores[3];
+		pthread_t estanco;
 	
 		pthread_create(&estanco,NULL,estanquero,NULL);
 
 		for(int i = 0 ; i <3 ; i++ ) {
-			void* auxiliar = (void * ) i ;
+			void* auxiliar = (void*) i ;
 			pthread_create(&fumadores[i],NULL,fumador,auxiliar);
 		}
 
@@ -136,6 +134,17 @@ using namespace std;
 			pthread_join(fumadores[i],NULL);
 		}
 		pthread_join(estanco,NULL);
+
+		//Elimino los semaforos :
+
+		sem_destroy(&semaforoEstanco);
+
+		for(int i= 0 ; i<3 ; i++ ) {
+
+			sem_destroy(&productoPreparado[i]);
+			
+
+		}
 
 
 	return 0 ;
