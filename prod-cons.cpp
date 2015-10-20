@@ -159,7 +159,7 @@ using namespace std ;
 		sem_destroy(&escribePantalla);
 		sem_destroy(&produc);
 		sem_destroy(&consum);
-		sem_destroy(&&queueMutex);
+		sem_destroy(&queueMutex);
 
 		cout << "Fin de la tarea";
 
