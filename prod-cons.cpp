@@ -98,10 +98,11 @@ using namespace std ;
 					sem_wait(&escribePantalla);                    //Espera permiso para poder escribir
 					int dato = (int) producir_dato() ;
 					sem_post(&escribePantalla);			// Devuelve el permiso de escribir
+					
+					sem_wait(&queueMutex);
+					cola.aniade(dato);
+					sem_post(&queueMutex);
 
-					sem_wait(&escribePantalla);                    //Espera permiso para poder escribir
-					int dato = (int) producir_dato() ;
-					sem_post(&escribePantalla);			// Devuelve el permiso de escribir
 
 					sem_post(&consum);
 					
