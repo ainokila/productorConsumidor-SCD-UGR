@@ -66,7 +66,9 @@ using namespace std ;
 	Cola cola;
 	sem_t produc ;
 	sem_t consum ; 
-	sem_t escribePantalla;                  
+	sem_t escribePantalla; 
+	sem_t queueMutex ;
+	
 	const unsigned num_items  = 40 ;
 
 	//******************************************************************************************
@@ -97,7 +99,9 @@ using namespace std ;
 					int dato = (int) producir_dato() ;
 					sem_post(&escribePantalla);			// Devuelve el permiso de escribir
 
-					cola.aniade(dato);
+					sem_wait(&escribePantalla);                    //Espera permiso para poder escribir
+					int dato = (int) producir_dato() ;
+					sem_post(&escribePantalla);			// Devuelve el permiso de escribir
 
 					sem_post(&consum);
 					
@@ -116,7 +120,10 @@ using namespace std ;
 		int dato ;		
 			
 			sem_wait(&consum);
+			
+			sem_wait(&queueMutex);				//Espero al mutex de la cola para poder guardar datos.
 			dato=cola.getElemento();
+			sem_post(&queueMutex);				//Devuelvo el mutex , ya he escrito en Cola
 
 			sem_wait(&escribePantalla);				//Espera permiso de escritura
 			consumir_dato( dato ) ;				//escribePantalla	
@@ -134,7 +141,8 @@ using namespace std ;
 
 		sem_init( &produc, 0, 10 );
 		sem_init( &consum, 0, 0 );
-		sem_init( &escribePantalla, 0, 1 );	
+		sem_init( &escribePantalla, 0, 1 );
+		sem_init( &queueMutex, 0, 1 );	
 
 		pthread_t produce;
 		pthread_t consume ; 
@@ -150,6 +158,7 @@ using namespace std ;
 		sem_destroy(&escribePantalla);
 		sem_destroy(&produc);
 		sem_destroy(&consum);
+		sem_destroy(&&queueMutex);
 
 		cout << "Fin de la tarea";
 
