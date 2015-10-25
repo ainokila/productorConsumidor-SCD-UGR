@@ -2,11 +2,11 @@
 
 Alumno : Cristian Velez Ruiz 
 
-Asignatura : Sistemas Concurrentes y Distribuidos
+Asignatura : Sistemas Concurrentes y Distribuidos - UNIVERSIDAD DE GRANADA 2015
 
-Curso : 2ºB
+Curso : *
 
-Grupo : B3
+Grupo : *
 
 _____________________________________________________________________________________________________________
 
@@ -38,7 +38,7 @@ Y los he inicializado de la siguiente manera :
 
 	sem_init( &queueMutex, 0, 1 ): Muy parecido al escribe pantalla , pero en este caso es para evitar conflictos de meter y sacar datos de la Cola.
 
-_____________________________________________________________________________________________________________	
+	
 
 Fumadores: 
 
