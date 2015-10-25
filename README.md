@@ -1,4 +1,4 @@
-# proconSCD
+# Problema Productor-Consumidor
 
 Alumno : Cristian Velez Ruiz 
 
