@@ -1,8 +1,11 @@
 # proconSCD
 
 Alumno : Cristian Velez Ruiz 
+
 Asignatura : Sistemas Concurrentes y Distribuidos
+
 Curso : 2ºB
+
 Grupo : B3
 
 _____________________________________________________________________________________________________________
