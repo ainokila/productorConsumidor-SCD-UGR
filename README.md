@@ -39,8 +39,9 @@ Y los he inicializado de la siguiente manera :
 	sem_init( &queueMutex, 0, 1 ): Muy parecido al escribe pantalla , pero en este caso es para evitar conflictos de meter y sacar datos de la Cola.
 
 	
+_____________________________________________________________________________________________________________
 
-Fumadores: 
+Fumadores : 
 
 En este programa no uso ninguna estructura de datos auxiliar para almacenar los datos , ya que cuando se produce por ejemplo papel , el mismo estanquero desbloquea al proceso que 
 necesitase papel.
